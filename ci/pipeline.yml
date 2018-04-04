@@ -9,7 +9,7 @@ resources:
 - name: flight-school-docker-image
   type: docker-image
   source:
-    repository: <your-dockerhub-repo>/flight-school-example
+    repository: rade95/flight-school-example
     username: {{dockerhub-username}}
     password: {{dockerhub-password}}
 
@@ -37,13 +37,14 @@ jobs:
         - -c
         - |
           output_dir=workspace
-
+          pwd
+          uname -a
           cat << EOF > "${output_dir}/Dockerfile"
           FROM ruby
 
           ADD flight-school /tmp/flight-school
           RUN bundle install --gemfile=/tmp/flight-school/Gemfile
-          RUN rm -rf /tmp/flight-school
+          ##RUN rm -rf /tmp/flight-school
           EOF
 
           cp -R ./flight-school "${output_dir}/flight-school"
@@ -52,7 +53,7 @@ jobs:
     params:
       build: workspace
 
-- name: test
+- name: test-it!
   plan:
   - get: flight-school-docker-image
     passed: [build-cached-image]
@@ -66,8 +67,10 @@ jobs:
       inputs:
       - name: flight-school
       run:
-        dir: flight-school
-        path: bundle
-        args:
-        - exec
-        - rspec
+        path: ./flight-school/ci/Tests/test.sh
+      #run:
+      #  dir: flight-school
+      #  path: bundle
+      #  args:
+      #  - exec
+      #  - rspec
