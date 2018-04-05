@@ -3,7 +3,7 @@ resources:
 - name: flight-school
   type: git
   source:
-    uri: https://github.com/concourse/flight-school
+    uri: https://github.com/95rade/flight-school
     branch: master
 
 - name: flight-school-docker-image
@@ -67,7 +67,8 @@ jobs:
       inputs:
       - name: flight-school
       run:
-        path: ./flight-school/ci/Tests/test.sh
+        path: ./flight-school/ci/test.sh
+        #path: ci/test.sh
       #run:
       #  dir: flight-school
       #  path: bundle
