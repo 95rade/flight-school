@@ -9,7 +9,7 @@ resources:
 - name: flight-school-docker-image
   type: docker-image
   source:
-    repository: rade95/flight-school-example
+    repository: rade95/flight-school-example    # dockerhub.com/rade95
     username: {{dockerhub-username}}
     password: {{dockerhub-password}}
 
@@ -26,11 +26,9 @@ jobs:
           #repository: ubuntu
           repository: ruby
       outputs:
-      - name: workspace
-
+      - name: workspace    # creates directory workspace and copies flight-school repo into it
       inputs:
-      - name: flight-school
-
+      - name: flight-school # input dir is the repo
       run:
         path: /bin/bash
         args:
@@ -47,9 +45,9 @@ jobs:
           ##RUN rm -rf /tmp/flight-school
           EOF
 
-          cp -R ./flight-school "${output_dir}/flight-school"
+          cp -R ./flight-school "${output_dir}/flight-school"  # copies repo dir 'flight-school' into image 'workspace'
 
-  - put: flight-school-docker-image
+  - put: flight-school-docker-image   # this is the output - docker-image
     params:
       build: workspace
 
@@ -61,7 +59,7 @@ jobs:
   - get: flight-school
     passed: [build-cached-image]
   - task: run-tests
-    image: flight-school-docker-image
+    image: flight-school-docker-image  # task runs inside image container
     config:
       platform: linux
       inputs:
